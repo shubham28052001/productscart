@@ -2,6 +2,9 @@
 
 Ye ek simple “product listing + shopping cart” web‑app hai jo **HTML, CSS, Bootstrap & plain JavaScript** use karke banaya gaya hai.  
 
+## 🌐 Live Demo
+
+[Click here to view the live project](https://shubham28052001.github.io/productscart/) 
 ## ✅ Features
 
 - Products ko fetch karta hai external API se (dummy JSON).  
