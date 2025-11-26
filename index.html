@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.7.0/fonts/remixicon.css" rel="stylesheet" />
+    <title>Document</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100%;
+            background-color: #121212;
+            color: #e0e0e0;
+            height: 100%;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+         @media screen and (max-width:400px) {
+            body {
+                width: 70vh;
+            }
+        }
+
+
+        .product-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            padding: 40px;
+        }
+
+        @media screen and (max-width:400px) {
+            .product-container {
+                grid-template-columns: repeat(1, 1fr);
+                padding: 20px;
+            }
+        }
+
+
+        .product-card {
+            background-color: #1e1e1e;
+            border-radius: 20px;
+            box-shadow: 0px 2px 5px 2px rgb(227, 227, 122);
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
+        }
+
+        @media screen and (max-width: 550px) {
+            .product-card {
+                padding: 12px;
+                border-radius: 15px;
+                box-shadow: 0px 2px 4px 1px rgb(227, 227, 122);
+            }
+        }
+
+        .carousel-inner {
+            width: 400px;
+            height: 200px;
+        }
+
+        .carousel-item img {
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+        }
+
+        .product-discount {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 10;
+            background-color: #ff6b6b;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            color: white;
+        }
+
+        .product-info {
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .product-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #e0e0e0;
+            margin-top: 5px;
+        }
+
+        .price {
+            font-weight: bold;
+            color: #4fc3f7;
+            font-size: 20px;
+        }
+
+        .product-stock {
+            color: rgb(3, 205, 3);
+            font-weight: bold;
+        }
+
+        .addtocart {
+            background-color: #0993d3;
+            font-weight: bolder;
+            padding: 2px;
+            border: none;
+            border-radius: 10px;
+        }
+
+        #cartPanel {
+            position: fixed;
+            width: 60%;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 650px;
+            border-radius: 20px;
+            background-color: #e0e0e0;
+            z-index: 100;
+            top: -700px;
+            padding: 20px;
+            transition: all 1.5s ease;
+            color: #121212;
+            overflow-y: auto;
+        }
+
+        @media screen and (max-width: 550px) {
+            #cartPanel {
+                width: 95%;
+                height: 550px;
+                padding: 15px;
+                border-radius: 15px;
+            }
+        }
+
+
+
+        #closeCart {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 40px;
+            cursor: pointer;
+            color: #1e1e1e;
+            padding: 5px 12px;
+            border-radius: 8px;
+            transition: 0.3s ease;
+        }
+
+        @media screen and (max-width: 550px) {
+            #closeCart {
+                font-size: 30px;
+                padding: 5px 10px;
+                right: 10px;
+                top: 8px;
+            }
+        }
+
+        .Remove {
+            background-color: #ff6b6b;
+            padding: 5px;
+            margin: 2px;
+            border: none;
+            cursor: pointer;
+            border-radius: 10px;
+            color: #f5f4f4;
+            font-weight: bold;
+        }
+
+        .decreaseQty,
+        .increaseQty {
+            background-color: #4fc3f7;
+            padding: 0px 10px;
+            font-size: 20px;
+            text-align: center;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+            padding-left: 30px;
+        }
+
+
+        .filterbutton,
+        .searchbutton {
+            background: linear-gradient(135deg, #d5bfcc, #6d69d8);
+            color: #fff;
+            font-size: 20px;
+            font-weight: bolder;
+            border: none;
+            border-radius: 10px;
+            padding: 8px 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        @media screen and (max-width: 600px) {
+
+            .filterbutton,
+            .searchbutton {
+                font-size: 16px;
+                padding: 6px 12px;
+            }
+        }
+
+        .input-button {
+            width: 60%;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin: 10px;
+            font-size: 18px;
+            text-align: center;
+            border: 1px solid rgb(98, 227, 5);
+            background-color: #0a0a0a;
+            color: #e0e0e0;
+        }
+
+        @media screen and (max-width: 600px) {
+            .input-button {
+                width: 80%;
+                font-size: 16px;
+                padding: 8px 12px;
+            }
+        }
+
+        .header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        @media screen and (max-width: 600px) {
+
+           .header {
+                width: 100%;
+            }
+        }
+
+
+        #sortSelect {
+            padding: 10px 15px;
+            font-size: 16px;
+            background-color: #1e1e1e;
+            color: #fff;
+            border: 2px solid #e3e37a;
+            border-radius: 10px;
+            outline: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 20px auto;
+        }
+
+        #sortSelect:hover {
+            background-color: #2a2a2a;
+            box-shadow: 0px 0px 10px #e3e37a;
+        }
+
+        @media screen and (max-width: 400px) {
+            #sortSelect {
+                width: 90%;
+                font-size: 14px;
+                padding: 8px 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="header">
+        <select id="sortSelect" onchange="sortProducts()">
+            <option value="">Sort by Price</option>
+            <option value="low-high">Low to High</option>
+            <option value="high-low">High to Low</option>
+            <option value="AtoZ">A to Z</option>
+            <option value="ZtoA">Z to A</option>
+        </select>
+        <input type="text" class="input-button" placeholder="searching">
+        <button class="searchbutton">search</button>
+    </header>
+
+    <div id="cartPanel">
+        <h2>Your Cart</h2>
+        <div id="cartItems"></div>
+        <span id="closeCart" onclick="closeCart()"><i class="ri-close-large-line"></i></span>
+    </div>
+
+    <div class="button-container">
+    </div>
+
+    <div class="product-container">
+    </div>
+
+    <script>
+
+
+        let store = [];
+        let cart = JSON.parse(sessionStorage.getItem("cart")) || [];
+        let filterstore = [];
+        const inputText = document.querySelector(".input-button")
+        const searchbutton = document.querySelector(".searchbutton")
+        const data = fetch("https://dummyjson.com/c/7f40-0a0f-4a81-b571").then((response) => {
+            return response.json();
+        }).then((response) => {
+            store = response.products;
+            console.log(store);
+            displaycards(store);
+            generatebutton();
+
+        })
+
+        function displaycards(items) {
+            const datadisplay = items.map((v) => {
+                return `
+       <article class="product-card">
+      <div id="carousel-${v.id}" class="carousel slide" data-bs-ride="carousel">
+  
+    <div class="carousel-indicators">
+    ${v.images.map((img, i) => `
+      <button type="button" data-bs-target="#carousel-${v.id}" data-bs-slide-to="${i}" class="${i === 0 ? 'active' : ''}" aria-current="${i === 0 ? 'true' : ''}" aria-label="Slide ${i}"></button>
+    `).join('')}
+    </div>
+
+  <div class="carousel-inner">
+    ${v.images.map((img, i) => `
+      <div class="carousel-item ${i === 0 ? 'active' : ''}">
+        <img src="${img}" class="d-block w-100" alt="slide-${i}">
+      </div>
+    `).join('')}
+  </div>
+
+  <button class="carousel-control-prev" type="button" data-bs-target="#carousel-${v.id}" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+  </button>
+
+  <button class="carousel-control-next" type="button" data-bs-target="#carousel-${v.id}" data-bs-slide="next">
+    <span class="carousel-control-next-icon"></span>
+  </button>
+   <h2 class="product-discount">${v.discountPercentage}%off</h2>
+</div>
+
+
+<div class="product-info">
+    <h2 class="product-title">${v.title}</h2>
+    <p class="category">${v.category}</p>
+    <p class="product-brand"><strong>Brand:</strong>${v.brand}</p>
+    <p class="product-description">${v.description}</p>
+    <p class="price">₹${v.price}</p>
+    <p class="product-stock"><strong>Stock:</strong>${v.stock}</p>
+    <p class="product-rating">Rating:${v.rating}⭐⭐⭐⭐⭐</p>
+    <button class="addtocart" onclick="addToCart(${v.id})"> Add to cart</button>
+   </div>
+      </article>`
+            })
+            document.querySelector(".product-container").innerHTML = datadisplay.join("")
+        }
+
+        function showCart() {
+            let total = 0
+            const cartItems = document.getElementById("cartItems");
+            cartItems.innerHTML = "";
+
+            cart.forEach((item, index) => {
+                total += item.price * item.quantity;
+                const div = document.createElement("div");
+                div.style.borderBottom = "1px solid #e0e0e0";
+                div.style.padding = "10px 0";
+
+                div.innerHTML = `
+            <strong>${item.title}</strong><br>
+            Price: ₹${item.price} <br>
+            Quantity:
+            <button class="decreaseQty" onclick="decreaseQty(${index})">-</button>
+            <span>${item.quantity}</span>
+            <button class="increaseQty" onclick="increaseQty(${index})">+</button>
+            <button class="Remove" onclick="removeItem(${index})">Remove</button>
+        `;
+                cartItems.appendChild(div);
+            });
+            const totalprice = document.createElement("div");
+            const sep = document.createElement("div");
+            sep.style.width = "100%";
+            sep.style.height = "2px";
+            sep.style.background = "#444";
+            sep.style.margin = "15px 0";
+
+            cartItems.appendChild(sep);
+            totalprice.textContent = `Total: ₹${total}`;
+            totalprice.style.fontSize = "20px"
+            totalprice.style.fontWeight = "bold"
+            cartItems.appendChild(totalprice);
+        }
+
+        function addToCart(id) {
+            const product = store.find((v) => {
+                return v.id === id;
+            })
+
+            const already = cart.find((v) => {
+                return v.id === id;
+            })
+            if (already) {
+                already.quantity += 1;
+                console.log(`Quantity updated: ${already.quantity}`);
+            } else {
+                cart.push({
+                    id: product.id,
+                    title: product.title,
+                    price: product.price,
+                    quantity: 1
+                });
+            }
+            document.getElementById("cartPanel").style.top = "0";
+            sessionStorage.setItem("cart",JSON.stringify(cart));
+            console.log(cart);
+            showCart();
+
+        }
+
+        function closeCart() {
+            document.getElementById("cartPanel").style.top = "-680px";
+        }
+
+        function removeItem(index) {
+            cart.splice(index, 1);
+             sessionStorage.setItem("cart",JSON.stringify(cart));
+            showCart();
+        }
+
+        function decreaseQty(index) {
+            if (cart[index].quantity > 1) {
+                cart[index].quantity--;
+            } else {
+                cart.splice(index, 1)
+            }
+             sessionStorage.setItem("cart",JSON.stringify(cart));
+            showCart();
+        }
+
+        function increaseQty(index) {
+            cart[index].quantity++;
+             sessionStorage.setItem("cart",JSON.stringify(cart));
+            showCart();
+        }
+
+        function generatebutton() {
+
+            const categories = store.reduce((previous, current) => {
+                if (!previous.includes(current.category)) {
+                    previous.push(current.category)
+                }
+                return previous;
+            }, [])
+
+            const buttons = categories.map((v) => {
+                return `<button class="filterbutton" onclick="filtered('${v}')">${v}</button> `
+            })
+            document.querySelector(".button-container").innerHTML = buttons.join("")
+        }
+
+        function filtered(category) {
+            const filterdata = store.filter((v) => {
+                return v.category === category;
+            })
+            filterstore = filterdata
+            displaycards(filterstore);
+        }
+
+
+
+
+        searchbutton.addEventListener("click", () => {
+            const value = inputText.value.toLowerCase();
+            if (value) {
+                const result = store.filter((items) => {
+                    return (
+                        (items.title.toLowerCase().includes(value)) ||
+                        (items.category.toLowerCase().includes(value)) ||
+                        (items.brand.toLowerCase().includes(value))
+                    )
+                })
+                filterstore = result;
+                if (result.length > 0) {
+                    displaycards(filterstore);
+                } else {
+                    document.querySelector(".product-container").innerHTML = `<h2 style="font-size: 30px; text-align:center;width: 100%; margin-top:20px; display:flex;justify-content:center">sorry!no products available</h2>`
+                }
+            } else {
+                filterstore = []
+                displaycards(store);
+            }
+        })
+
+
+        function sortProducts() {
+            const value = document.querySelector("#sortSelect").value;
+            const listtosort = filterstore.length > 0 ? filterstore : store;
+            if (value === "low-high") {
+                listtosort.sort((a, b) => {
+                    if (a.price > b.price) {
+                        return 1;
+                    } else {
+                        return -1;
+                    }
+                })
+            }
+            else if (value === "high-low") {
+                listtosort.sort((a, b) => {
+                    if (a.price > b.price) {
+                        return -1;
+                    } else {
+                        return 1;
+                    }
+                })
+            }
+            else if (value === "AtoZ") {
+                listtosort.sort((a, b) => {
+                    if (a.title > b.title) {
+                        return 1;
+                    } else {
+                        return -1;
+                    }
+                })
+            }
+            else if (value === "ZtoA") {
+                listtosort.sort((a, b) => {
+                    if (a.title > b.title) {
+                        return -1;
+                    } else {
+                        return 1;
+                    }
+                })
+            }
+            displaycards(listtosort);
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
